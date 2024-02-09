@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "TeleprompterConsole/1.0.0": {
+        "runtime": {
+          "TeleprompterConsole.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TeleprompterConsole/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
