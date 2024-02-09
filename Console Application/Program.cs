@@ -2,19 +2,54 @@
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
-        var lines = ReadFrom("sampleQuotes.txt");
-        foreach (var line in lines)
-        {
-            Console.Write(line);
+        await RunTeleprompter();
+    }
 
-            if (!string.IsNullOrWhiteSpace(line))
+    private static async Task RunTeleprompter()
+    {
+        var config  = new Config();
+        var displayTask = ShowTeleprompter(config);
+        var speedTask = GetInput(config);
+        await Task.WhenAny(displayTask, speedTask);
+    }
+
+    private static async Task GetInput(Config config)
+    {
+        Action work = () =>
+        {
+            do
             {
-                var pause = Task.Delay(200);
-                pause.Wait();
+                var key = Console.ReadKey(true);
+                if (key.KeyChar == '>')
+                {
+                    config.UpdateDelay(-10);
+                }
+                else if (key.KeyChar == '<')
+                {
+                    config.UpdateDelay(10);
+                } else if (key.KeyChar == 'x' || key.KeyChar == 'X')
+                {
+                    config.SetDone();
+                }
+            } while (!config.Done);
+        };
+        await Task.Run(work);
+    }
+
+    private static async Task ShowTeleprompter(Config config)
+    {
+        var words = ReadFrom("sampleQuotes.txt");
+        foreach (var word in words)
+        {
+            Console.Write(word);
+            if (!string.IsNullOrWhiteSpace(word))
+            {
+                await Task.Delay(config.DelayInMilliseconds);
             }
         }
+        config.SetDone();
     }
 
     private static IEnumerable<string> ReadFrom(string file)
@@ -25,11 +60,17 @@ internal class Program
         {
             while ((line = reader.ReadLine()) != null )
             {
-                //yield return line;
                 var words = line.Split(" ");
+                var lineLength = 0;
                 foreach (var word in words)
                 {
                     yield return $"{word} ";
+                    lineLength += word.Length + 1;
+                    if ( lineLength > 70)
+                    {
+                        yield return Environment.NewLine;
+                        lineLength = 0;
+                    }
                 }
                 yield return Environment.NewLine;
             }
