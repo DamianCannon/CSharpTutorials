@@ -14,7 +14,14 @@ internal class Program
             var repositories = await ProcessRepositoriesAsync(client);
             foreach (var repo in repositories ?? Enumerable.Empty<Repository>())
             {
-                Console.WriteLine($"{repo.Name}: {repo.FullName}");
+                Console.WriteLine($"Name: {repo.Name}");
+                Console.WriteLine($"Full Name: {repo.FullName}");
+                Console.WriteLine($"Homepage: {repo.Homepage}");
+                Console.WriteLine($"GitHub: {repo.GitHubHomeUrl}");
+                Console.WriteLine($"Description: {repo.Description}");
+                Console.WriteLine($"Watchers: {repo.Watchers:#,0}");
+                Console.WriteLine($"Last Push: {repo.LastPush}");
+                Console.WriteLine();
             }
         }
     }
