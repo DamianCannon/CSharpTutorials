@@ -1,4 +1,6 @@
-﻿internal class Program
+﻿using CardDeckShuffle;
+
+internal class Program
 {
     private static void Main(string[] args)
     {
@@ -10,6 +12,31 @@
         {
             Console.WriteLine(card);
         }
+
+        var topHalf = startingDeck.Take(26);
+        var bottomHalf = startingDeck.Skip(26);
+        var shuffledDeck = topHalf.InterleaveSequenceWith(bottomHalf);
+
+        foreach (var card in shuffledDeck)
+        {
+            Console.WriteLine(card);
+        }
+
+        var times = 0;
+        shuffledDeck = startingDeck;
+        do {
+            shuffledDeck = shuffledDeck.Take(26).InterleaveSequenceWith(shuffledDeck.Skip(26));
+            foreach (var card in shuffledDeck)
+            {
+                Console.WriteLine(card);
+            }
+            Console.WriteLine();
+            times++;
+
+        } while (!startingDeck.SequenceEquals(shuffledDeck));
+
+        Console.WriteLine($"Number of shuffles: {times}");
+
     }
 
     private static IEnumerable<string> Suits()
