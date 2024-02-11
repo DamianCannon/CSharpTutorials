@@ -30,5 +30,13 @@
             return true;
         }
 
+        internal static IEnumerable<T> LogQuery<T>(this IEnumerable<T> sequence, string tag)
+        {
+            using (var writer = File.AppendText("debug.log"))
+            {
+                writer.WriteLine($"Executing Query {tag}");
+            }
+            return sequence;
+        }
     }
 }

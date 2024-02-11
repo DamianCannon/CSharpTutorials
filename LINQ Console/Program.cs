@@ -1,12 +1,15 @@
 ﻿using CardDeckShuffle;
+using System.Net.Security;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        var startingDeck = from s in Suits()
-                           from r in Ranks()
-                           select new { Suit = s, Rank = r };
+
+        var deck = (from s in Suits()
+                            from r in Ranks()
+                            select new { Suit = s, Rank = r });
+        var startingDeck = deck.ToArray();
 
         foreach (var card in startingDeck)
         {
@@ -25,7 +28,8 @@ internal class Program
         var times = 0;
         shuffledDeck = startingDeck;
         do {
-            shuffledDeck = shuffledDeck.Take(26).InterleaveSequenceWith(shuffledDeck.Skip(26));
+            //shuffledDeck = shuffledDeck.Take(26).LogQuery("Bottom half").InterleaveSequenceWith(shuffledDeck.Skip(26).LogQuery("Top Half")).LogQuery("Shuffle").ToArray();
+            shuffledDeck = shuffledDeck.Skip(26).LogQuery("Bottom half").InterleaveSequenceWith(shuffledDeck.Take(26).LogQuery("Top Half")).LogQuery("Shuffle").ToArray();
             foreach (var card in shuffledDeck)
             {
                 Console.WriteLine(card);
